@@ -1,0 +1,10 @@
+{
+  "name": "poyori-extension",
+  "version": "1.0.0",
+  "description": "8-Bit Virtual Web Companion for Google Chrome",
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build-bundle.js"
+  }
+}

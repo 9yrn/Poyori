@@ -1,158 +1,110 @@
-# Poyori (ポヨリ) — 8-Bit Virtual Web Companion
+# Poyori (ポヨリ). 🐾
 
-> A retro 90s Japanese virtual pet that roams across your webpages, evolving based on your real browsing activity, study habits, and productivity in the realm of **Mochimori (もちもり)**.
+**Poyori** is a nostalgic, 9-bit retro virtual pet Chrome extension built entirely with Vanilla JavaScript, Web Components (Shadow DOM), and Manifest V3. Roaming freely along the bottom edge of your webpages in the mystical realm of **Mochimori (餅森)**, Poyori responds to your real-time browsing habits, evolves across 6 distinct animal lineages, keeps you focused with a built-in focus accountability timer, and provides deep care mechanics with zero website interference.
 
----
+![Chrome Extension](https://img.shields.io/badge/Chrome_Extension-Manifest_V3-%234285F4.svg?style=for-the-badge&logo=googlechrome&logoColor=white)
+![JavaScript](https://img.shields.io/badge/ES6_JavaScript-%23F7DF1E.svg?style=for-the-badge&logo=javascript&logoColor=black)
+![Web Audio API](https://img.shields.io/badge/Web_Audio_API-Chiptune_Synth-%23FF6F00.svg?style=for-the-badge&logo=audio&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-Test_Runner-%23339933.svg?style=for-the-badge&logo=nodedotjs&logoColor=white)
 
-## 🚀 Quick Start: How to Install in Google Chrome (10 Seconds)
+## ✨ Features
 
-1. Open **Google Chrome** and enter `chrome://extensions` in the address bar.
-2. In the top-right corner, toggle **Developer mode** to **ON**.
-3. In the top-left corner, click the **Load unpacked** button.
-4. Select the folder:
+- **In-Page Roaming Web Companion:** Roams across any website safely inside an isolated, CSP-immune Shadow DOM (`#poyori-root`) with physics, walking animations, dragging, and zero style collision.
+- **6 Distinct Animal Lineages (36 Unique 9-Bit Sprites):** Evolve your companion across 6 disciplined branches with 100% consistent animal breeds (Coding Cat, Creative Bird, Literature Fox, Research Owl, Gaming Wyvern, and Personal Dev Shiba) through 6 life stages (Tamago → Umare → Kodama → Seishin → Shinju → Shin'en).
+- **Focus Accountability Timer:** Choose your discipline, select session duration (15m, 25m, 45m, 60m), and receive real-time on-page speech bubble nudges if you drift to off-task websites, earning major XP and Koban (小判) upon completion.
+- **Handheld Tamagotchi Device Console:** A retro handheld popout with 3 tactile arcade buttons (`TAB`, `ACT`, `WAKE`/`REST`), status vitals (Hunger, Energy, Bond, Sickness), daily quests, food market, almanac (Zukan), and companion roster.
+- **Adjustable Display Sizing & Creature Themes:** Dynamically toggle between Small (48px), Normal (64px), Large (80px), and Giant (96px) display sizes with real-time live preview stages and unlockable color themes for higher evolutions.
+- **Multi-Pet Roster & Custom Naming:** Name and rename your companions with live input sanitization, and switch between unlocked pets in your active roster shelf.
+- **Illness & Yakusō Herbal Medicine:** Sickness conditions triggered by neglect or poor care can be treated and cured with authentic Yakusō (薬草) medicine purchased with Koban.
+- **Onboarding Tutorial & Skip:** Interactive 5-step RPG tutorial for first-time installation that introduces lore, lets players pick their starter egg breed and assign their pet's first name, with skip controls on every step and dashboard replayability.
+- **Zero Unicode Emojis & Pure 9-Bit Aesthetics:** Every visual element uses handcrafted pixel art SVGs and the authentic `PixelOperator8` retro typography with procedural chiptune synthesizers (Web Audio API).
+- **Authenticated Developer Access Port:** Hidden 7-tap developer gesture or hotkey access to God Mode, vitals simulation, and instant morphing across all 36 creatures without exposing cheats to normal users.
+
+## 🛠 Tech Stack
+
+- **Chrome Extensions API (Manifest V3):** Background service worker (`background/background.js`) handling tab focus tracking, alarms, idle state, and cross-tab communication.
+- **Vanilla ES6+ JavaScript & Shadow DOM:** Zero external runtime framework dependencies. Runs in an isolated Shadow DOM container with complete immunity from host webpage CSS and CSP policies.
+- **Web Audio API:** Procedural 8-bit retro sound synthesizer generating real-time chiptune boops, chirps, purrs, and fanfares without external audio audio files.
+- **Chrome Storage API:** Persistent local data synchronization (`chrome.storage.local`) managing companion vitals, inventory, tasks, stats, and settings across browser sessions.
+- **Node.js Native Test Runner (`node:test`):** Lightweight, zero-dependency TDD test suite validating game engine ticks, domain classifications, leveling, sickness, and UI regressions.
+
+## 🚀 Getting Started
+
+If you want to run **Poyori** locally on your machine, follow these steps:
+
+### Prerequisites
+
+Make sure you have:
+- Google Chrome (or any Chromium-based browser like Brave, Edge, Opera, or Arc).
+- [Node.js](https://nodejs.org/) (`>= 18.0.0`) installed on your machine (for tests and bundle compilation).
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/poyori-extension.git
+   cd poyori-extension
    ```
-   tamagotchi-extension/
+
+2. **Build the content script bundle:**
+
+   ```bash
+   npm run build
    ```
-   *(e.g., `/Users/earanhunukumbura/Downloads/planner_262 2/tamagotchi-extension`)*
-5. Click the puzzle icon in Chrome's toolbar and **Pin** 📌 **Poyori**!
-6. Visit any website (e.g., GitHub, Wikipedia, MDN, or any news article) — **Poyori will appear roaming along the bottom of your screen!**
 
----
+   _This command compiles and validates `content/content.bundle.js` with zero syntax errors._
 
-## 🌟 How Poyori Appears in Webpages (CSP-Immune Shadow DOM)
+3. **Load the extension into Google Chrome:**
+   - Open Chrome and navigate to `chrome://extensions/`.
+   - In the top-right corner, toggle **Developer mode** to **ON**.
+   - In the top-left corner, click **Load unpacked**.
+   - Select the `tamagotchi-extension/` directory.
+   - Click the Extensions puzzle icon in Chrome's toolbar and **Pin** 📌 **Poyori**!
+   - Visit any website (e.g. GitHub, MDN, Wikipedia) — Poyori will appear roaming along the bottom of your screen!
 
-Poyori renders directly on the bottom edge of web pages inside an **isolated Shadow DOM** (`#poyori-root`).
-- **Zero Style Interference**: Host webpage styles never affect Poyori, and Poyori never alters the page's styling.
-- **CSP Immunity**: The bundled content script runs entirely within Chrome's Isolated World with inlined styles, meaning websites with strict Content Security Policies (like GitHub, Twitter/X, Google) cannot block Poyori from appearing.
-- **Wander & Explore**: Poyori roams back and forth, sniffs around, blinks, and sleeps when you are idle.
-- **Drag & Drop**: Click and hold Poyori to pick them up, carry them anywhere on the page, and let go.
-- **Quick Speech Bubble**: Click Poyori once to open a quick speech bubble:
-- **Quick Speech Bubble**: Click Poyori once to open a quick speech bubble:
-  - **Feed (Gohan)**: Instantly feed a snack.
-  - **Pet (Naderu)**: Shower Poyori with affection to raise **Kizuna (Bond)**.
-  - **Device**: Launches the in-page retro handheld Tamagotchi device popout.
-- **Website Classifier Badge**: Look at the bottom-right corner for the subtle classification pill (e.g. `Denki (+XP)` or `Distracting`). Click it once to cycle how that domain is tracked!
+### Building for Production
 
----
+To bundle the files and package a fresh distribution archive for the Chrome Web Store, run:
 
-## 🎨 9-Bit Pixel Art System & Custom Petting Reactions
-
-Poyori features a handcrafted, retro 90s visual design:
-- **Zero Stock Unicode Emojis**: Every emoji across the extension has been replaced by custom **8-bit / 9-bit pixel art SVG icons** (food items, Koban coins, streak flames, vital hearts, energy sparks, sakura petals, books, scrolls, robes, and navigation icons).
-- **Custom Minimal Petting Reactions (No Emojis)**: When you pet Poyori, they react organically through:
-  - **In-Sprite Smiling Squint Eyes**: Eyes morph into happy retro curves (`^ ^`).
-  - **Sweet Pink Cheek Blush**: Pink blush pixels (`#ff7675`) appear on their cheeks.
-  - **Squish & Spring Physics**: Soft retro squash-and-stretch CSS animation.
-  - **Procedural Chiptune Purr**: A gentle, ascending two-tone purr synthesised in real time using the Web Audio API.
-  - **Zero Emoji Clutter**: No floating hearts or Unicode emojis obscure the creature.
-- **Authentic Font**: Incorporates the user-provided **PixelOperator** retro font family (`PixelOperator8` and `PixelOperator`), embedded in Base64 directly into the Shadow DOM CSS for zero CSP blocking.
-- **Warm RPG Aesthetic**: Inspired by classic 90s RPG parchment dialogue boxes, beveled pixel borders, and inset LCD screen bezels.
-
----
-
-## 🖥️ Dedicated Mochimori Dashboard & Preferences Portal
-
-Poyori includes a full-screen, retro-modern **Dashboard Page** (`dashboard/dashboard.html`) to manage all options and view stats:
-
-### How to open the Dashboard:
-1. **Via Toolbar Popup**: Click the Poyori extension icon in Chrome's toolbar, then click **Full Dashboard Portal**.
-2. **Via In-Page Device**: Open the handheld device on any page, click the Settings tab, and click **Open Full Dashboard Page**.
-3. **Via Chrome Extensions**: Right-click the Poyori extension icon in your toolbar and select **Options**.
-
-### What you can do on the Dashboard:
-- **Pet Overview**: High-resolution pixel LCD display, mood readout, and comprehensive meters for Onaka (Hunger), Genki (Energy), Kizuna (Bond), and Shinka XP.
-- **Mochimori Zukan (Almanac)**: Browse all 24 creatures across all 4 branches, with filter chips and Kōmyō indicators.
-- **Tasks & Trials (Shiren)**: Create custom to-dos with coin and food rewards, check off tasks with chiptune fanfare, and monitor daily automated quests.
-- **Wardrobe & Shop (Kisekae)**: Buy and equip accessories (Headbands, Tanuki leaves, Scholar hats, Visors, Crowns) and switch screen palettes (Classic LCD, Game Boy Pocket, Cyber Neon, Sakura Mochi).
-- **Website Tracking Manager**: Add custom domain rules for coding, academic, reading, or distracting categories.
-- **Game Preferences**:
-  - Switch terminology mode: **Bilingual**, **Japanese Only**, or **English Only**.
-  - Toggle consequence mode: **Cozy Mode** (pet never dies) vs. **Hardcore Mode** (neglect consequences & Gūtara branch).
-  - Adjust procedural 8-bit Web Audio volume or mute.
-  - Set custom night bedtime hours (e.g. 10:30 PM to 07:30 AM).
-  - Export and import save data (JSON) or reset back to a fresh egg.
-
----
-
-## 🧪 Automated Requirement Test Suite
-
-A comprehensive test suite is included to guarantee all requirements and game mechanics operate as specified without bias.
-
-To run the tests:
 ```bash
-cd tamagotchi-extension
+# 1. Compile bundle
+npm run build
+
+# 2. Package distribution zip (excluding dev files and git metadata)
+zip -r -FS ../tamagotchi-extension.zip . -x "node_modules/*" ".git/*" ".DS_Store"
+```
+
+This will produce the production-ready `tamagotchi-extension.zip` in the parent directory.
+
+## 📂 Project Structure
+
+This project is built with clean separation of concerns and modular ES6 architecture. Here is a breakdown of the key directories in the repository:
+
+- `/background` - Manifest V3 background service worker managing website classification, focus ticks, alarms, and fresh install hooks.
+- `/content` - In-page Shadow DOM host, wandering physics controller (`pet-controller.js`), 9-bit creature sprites (`sprites.js`), and bundled script (`content.bundle.js`).
+- `/dashboard` - Full-screen Mochimori Dashboard page (`dashboard.html`), 3D flipping overview card, preferences, almanac, companion shelf, and developer access portal (`dev-portal.html`).
+- `/popup` - Quick Chrome toolbar popup (`popup.html`) with real-time domain classification buttons, quick actions, and pet vitals.
+- `/shared` - Core cross-environment game logic:
+  - `constants.js` - Central source of truth for creature lineages, stages, food items, accessories, palettes, and default state.
+  - `game-engine.js` - Pure engine functions for vitals decay, feeding, focus ticks, leveling calculations, and evolution milestone checks.
+  - `pixel-icons.js` - Zero-emoji 9-bit SVG icon matrices and Base64 data URI generators.
+  - `storage.js` - Local storage wrapper with deep merge and cross-tab update subscriptions.
+- `/ui` - Modular retro RPG UI components:
+  - `handheld-modal.js` & `.css` - In-page 9-bit console device with A/B/C action buttons and multi-tab interface.
+  - `tutorial-modal.js` & `.css` - First-time setup onboarding walkthrough with starter breed selection and skip support.
+  - `celebration-modal.js` & `.css` - Shinka evolution fanfare and Koban reward celebration dialogs.
+  - `quick-bubble.js` - One-click speech bubble for in-page pet care and device launching.
+  - `audio.js` - Procedural chiptune Web Audio synthesizer.
+- `/assets` - Embedded pixel fonts (`PixelOperator8`, `PixelOperator`) and extension icon artwork.
+- `/tests` - Comprehensive test suite (116+ automated unit and integration tests).
+
+## 🧪 Testing
+
+This project is configured out-of-the-box with comprehensive unit tests for all game engine mechanics, breed trees, focus timers, and UI integrity. To run the automated test suite, simply execute:
+
+```bash
 npm test
 ```
 
-### What is tested (33 automated test cases):
-- **Stages & Terminology**: Verifies stages 1–6 (Tamago → Umare → Kodama → Seishin → Shinju → Shin'en) and bilingual terminology dictionaries.
-- **Creatures & Branches**: Verifies all 4 branches (Denki, Chishiki, Monogatari, Gūtara) and all 24 creature definitions.
-- **Game Mechanics**: Tests feeding, inventory consumption, task rewards, XP gains, distraction fatigue, sleep triggers, and dominant branch selection.
-- **Endgame Progressions**: Verifies 7-day streak unlocking the radiant Kōmyō (光明) form.
-- **Consequences**: Verifies Cozy mode safety vs. Hardcore mode runaway penalties and Gūtara branch steering.
-- **9-Bit Pixel Art Icons System**: Verifies all 33 icon grids, Base64 SVG generation, crispEdges rendering, and emoji automatic resolution.
-- **Minimal Petting Reactions**: Verifies in-sprite squint smiling face, cheek blush palette token, and zero emoji emotes.
-- **Zero Stock Emoji Audit**: Confirms dashboard, popup, and handheld device contain zero raw Unicode emojis.
-- **In-Page Website Presence**: Simulates real webpage DOM injection to verify `#poyori-root`, open Shadow DOM, wandering pet, speech bubble, classifier badge, and handheld device.
-- **Architecture**: Validates Manifest V3 compliance, options page integration, and asset integrity.
-
----
-
-## 🧬 Life Stages (生命の段階)
-
-| Level | Japanese Stage | Romaji | Meaning |
-|---|---|---|---|
-| **1** | **卵** | **Tamago** | Mysterious egg crackling with digital energy |
-| **2** | **生まれ** | **Umare** | Birth / Hatchling taking first steps |
-| **3** | **木霊** | **Kodama** | Young spirit forming personality |
-| **4** | **精神** | **Seishin** | Developing mind & identity |
-| **5** | **神獣** | **Shinju** | Majestic adult divine beast |
-| **6** | **神焔** | **Shin'en** | Ascended mythic flame |
-
----
-
-## ⚡ The 4 Evolution Branches
-
-Your real browsing habits dictate which path Poyori follows:
-
-1. **⚡ Denki Branch (電気) — Cyber & Tech**: Coding, engineering, programming (GitHub, StackOverflow, MDN, LeetCode).
-   - *Denki Tamago* → *Pikoneko (ピコ猫)* → *Kikai Neko (機械猫)* → *Glitch Golem* → *Raijin Drake (雷神ドレイク)* → **Kōmyō Raijin (光明雷神)**.
-2. **📚 Chishiki Branch (知識) — Scholar & Science**: Academics, math, research (Wikipedia, arXiv, Coursera, JSTOR).
-   - *Chishiki Tamago* → *Fukurō-ko (ふくろう子)* → *Owl Mage* → *Hoshi Sphinx (星スフィンクス)* → *Hoshi no Kenja (星の賢者)* → **Kōmyō Kenja (光明賢者)**.
-3. **📖 Monogatari Branch (物語) — Story & Language**: Literature, language learning, reading (Duolingo, Medium, Substack, Goodreads).
-   - *Yume Tamago (夢卵)* → *Hanabira Sprite (花びらスプライト)* → *Kotoba Kitsune (言葉狐)* → *Hane no Ryū (羽の竜)* → *Monogatari Kitsune (物語狐)* → **Kōmyō Kitsune (光明狐)**.
-4. **💤 Gūtara Branch (ぐうたら) — Slacker (Hardcore Neglect Path)**: Heavy idleness and time on distracting sites (YouTube, Reddit, TikTok).
-   - *Nemu Tamago (ねむ卵)* → *Mochi Blob* → *Gūtara Slime* → *Namakemono (怠け者)* → *Daradara Oni (だらだら鬼)* → **Taida no Kami (怠惰の神)**.
-
----
-
-## 🛠️ Developer Access Port (God Mode & Verification)
-
-To allow the author to test and verify every single feature (all 24 creatures, unlimited Koban, all foods, all accessories, instant evolutions, vitals overrides) without having dev cheats visible or freely accessible to regular users when pushed to GitHub, Poyori features a **Gated Dev Access Port**.
-
-### Why an Authenticated Dev Port instead of a Duplicate Project?
-Maintaining a duplicate codebase leads to git merge conflicts and divergent bugs. Instead, the Dev Port is **completely locked and hidden by default** (`devMode = false`). Regular users see the normal game constraints (10 starting Koban, locked cosmetics, normal progression).
-
-### How to Unlock the Dev Access Port:
-Choose any of the following 4 developer methods:
-
-1. **Direct Standalone Portal**:
-   - Open `dashboard/dev-portal.html` directly in Chrome.
-2. **URL Parameter in Dashboard**:
-   - Visit `dashboard/dashboard.html?dev=true` or append `#dev`.
-3. **Secret 7-Tap Developer Gesture**:
-   - Tap the roaming **Poyori companion pet 7 times** on any webpage, or click the Dashboard / Handheld title banner 7 times.
-   - A prompt will request the developer key. Access is gated by one-way **SHA-256 cryptographic hashes**, ensuring no developer passwords are ever stored or exposed in plaintext in the codebase or GitHub repository.
-4. **Developer Hotkey**:
-   - Press **`Ctrl + Shift + D`** (or **`Cmd + Shift + D`** on macOS) anywhere on the dashboard.
-
-### Features Available in Dev Port:
-- **Instant God Mode**: Grants 99,999 Koban, discovers all 24 creatures in Zukan, unlocks all 5 accessories + all palettes, maxes food inventory (x99), and advances streak to 7 days.
-- **24-Creature Morpher**: Instant dropdown to morph your active companion into ANY of the 24 creatures across all branches and stages, with live sprite preview.
-- **Unlimited Koban**: Buttons to add `+1,000`, `+10,000`, `Set 99,999`, or `Reset 0`.
-- **Granary Control**: `+50 All Food Items` or individual +10 snack boosts.
-- **Vitals & Mood Simulator**: Force starvation (0% Onaka), exhaustion (0% Genki), sickness, or grumpy mood.
-- **Time Machine**: Fast-forward streaks (+1 day, +7 days for Kōmyō) or simulate 12h/48h neglect periods.
-- **Test Celebratory Fanfares**: Instantly trigger cosmetic purchase plaque, egg hatching fanfare, evolution fanfare, or mythic Kōmyō ascension alert.
-- **Lock & Reset**: Click **"Lock Dev Port"** or reset to clean player default before taking public screenshots or committing.
-
+_All 116+ test cases run with sub-second execution using Node.js's native test runner (`node --test`), verifying zero stock Unicode emojis, life stage progressions, sickness remedies, domain classifications, and responsive layouts._

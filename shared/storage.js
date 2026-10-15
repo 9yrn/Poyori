@@ -40,7 +40,7 @@ export async function getState() {
         });
       } else {
         // Deep merge with default state so any newly added settings/fields are populated
-        const merged = deepMerge(JSON.parse(JSON.stringify(DEFAULT_STATE)), result[STORAGE_KEY]);
+        const merged = deepMerge(DEFAULT_STATE, result[STORAGE_KEY]);
         resolve(merged);
       }
     });
@@ -101,15 +101,54 @@ export function subscribeState(callback) {
 }
 
 /**
- * Recursively merges source properties into target.
+ * Recursively merges source properties into target without mutating the original target.
  * Preserves nested default configuration when user state is loaded.
+ * Handles arrays by treating the source array as the override value.
  */
 function deepMerge(target, source) {
-  for (const key of Object.keys(source)) {
-    if (source[key] instanceof Object && !Array.isArray(source[key]) && target[key]) {
-      Object.assign(source[key], deepMerge(target[key], source[key]));
+  const isObject = (item) => item !== null && typeof item === 'object' && !Array.isArray(item);
+
+  if (!isObject(target) || !isObject(source)) {
+    return source;
+  }
+
+  // Create an initial full clone of the target to avoid mutating it.
+  const result = customClone(target);
+
+  // Recursively apply source properties to the newly cloned result.
+  function applyMerge(res, src) {
+    for (const key of Object.keys(src)) {
+      if (isObject(src[key]) && isObject(res[key])) {
+        applyMerge(res[key], src[key]); // Mutate the clone directly
+      } else {
+        res[key] = customClone(src[key]); // Avoid leaking source references
+      }
     }
   }
-  Object.assign(target || {}, source);
-  return target;
+
+  applyMerge(result, source);
+  return result;
+}
+
+/**
+ * Creates a deep copy of an object or array.
+ */
+function customClone(obj) {
+  if (obj === null || typeof obj !== 'object') {
+    return obj;
+  }
+  if (Array.isArray(obj)) {
+    const arr = new Array(obj.length);
+    for (let i = 0; i < obj.length; i++) {
+      arr[i] = customClone(obj[i]);
+    }
+    return arr;
+  }
+  const clonedObj = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      clonedObj[key] = customClone(obj[key]);
+    }
+  }
+  return clonedObj;
 }

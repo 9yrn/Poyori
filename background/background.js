@@ -91,6 +91,16 @@ function flushBrowsingTime(state) {
   const durationSecs = Math.floor((now - activeDomainStartTime) / 1000);
   if (durationSecs >= 5) {
     const result = PoyoriEngine.recordBrowsing(state, activeDomain, durationSecs);
+
+    // Process focus session timer if active
+    if (state.focusSession && state.focusSession.isActive) {
+      const focusResult = PoyoriEngine.processFocusTick(state, activeDomain, durationSecs);
+      // Ensure state mutations from processFocusTick are saved properly
+      if (state.focusSession.remainingSeconds <= 0) {
+        PoyoriEngine.completeFocusSession(state);
+      }
+    }
+
     activeDomainStartTime = now;
 
     if (result && result.evolved) {

@@ -749,14 +749,14 @@ function renderWardrobe() {
     </button>
   `).join('');
 
-  paletteRow.querySelectorAll('.pal-btn').forEach(b => {
-    b.onclick = async () => {
-      pet.palette = b.dataset.id;
-      audioSynth.chirp();
-      await saveState(state);
-      renderAll();
-    };
-  });
+  paletteRow.onclick = async (e) => {
+    const b = e.target.closest('.pal-btn');
+    if (!b) return;
+    pet.palette = b.dataset.id;
+    audioSynth.chirp();
+    await saveState(state);
+    renderAll();
+  };
 
   // Creature Theme Palettes
   const themesRow = document.getElementById('dash-creature-themes-row');

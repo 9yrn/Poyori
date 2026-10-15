@@ -7,6 +7,8 @@ import { audioSynth } from './audio.js';
 import { PoyoriEngine } from '../shared/game-engine.js';
 import { getTerm } from '../shared/constants.js';
 import { getPixelIconHtml } from '../shared/pixel-icons.js';
+import { getCreatureSprite } from '../content/sprites.js';
+import { triggerCelebration } from '../shared/ui-utils.js';
 
 export class QuickBubble {
   constructor(shadowRoot, options = {}) {
@@ -98,6 +100,8 @@ export class QuickBubble {
         audioSynth.munch();
         this.onPetAction('feed');
         this.onStateChange(state);
+        triggerCelebration(res.evolution, window.celebrationModal, state, PoyoriEngine, getCreatureSprite, () => this.onStateChange(state), null);
+
         this.close();
       } else {
         audioSynth.boop();
@@ -107,9 +111,10 @@ export class QuickBubble {
 
     this.container.querySelector('#q-pet').addEventListener('click', () => {
       audioSynth.purr();
-      PoyoriEngine.pet(state);
+      const res = PoyoriEngine.pet(state);
       this.onPetAction('pet');
       this.onStateChange(state);
+      triggerCelebration(res.evolution, window.celebrationModal, state, PoyoriEngine, getCreatureSprite, () => this.onStateChange(state), null);
       this.close();
     });
 

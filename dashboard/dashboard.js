@@ -11,6 +11,7 @@ import { getCreatureSprite } from '../content/sprites.js';
 import { audioSynth } from '../ui/audio.js';
 import { getPixelIconHtml } from '../shared/pixel-icons.js';
 import { CelebrationModal } from '../ui/celebration-modal.js';
+import { triggerCelebration } from '../shared/ui-utils.js';
 import { TutorialModal } from '../ui/tutorial-modal.js';
 
 let state = null;
@@ -451,27 +452,7 @@ function setupOverviewActions() {
       renderAll();
 
       if (res.evolution && res.evolution.evolved && celebrationModal) {
-        const evo = res.evolution;
-        const isHatch = evo.stage === 2;
-        celebrationModal.show({
-          type: isHatch ? 'hatch' : 'evolution',
-          title: isHatch ? 'EGG HATCHED!' : (evo.isKomyo ? 'MYTHIC ASCENSION!' : 'EVOLUTION UNLOCKED!'),
-          subtitle: isHatch ? '生まれ (Umare) - A New Life Begins!' : '神獣進化 (Shinju Shinka) - Divine Evolution!',
-          name: `${evo.creature.name} (${evo.creature.jaName})`,
-          badgeText: `STAGE ${evo.stage || 2} ・ ${evo.creature.branch.toUpperCase()}`,
-          spriteUrl: getCreatureSprite(evo.newId, 'idle1', state.pet.accessory),
-          description: evo.creature.desc || 'Your dedication and focused habits have guided Poyori to evolve!',
-          actionLabel: 'Name & Continue!',
-          enableNaming: true,
-          currentName: state.pet.name,
-          onAction: async (newName) => {
-            if (newName && newName.trim()) {
-              PoyoriEngine.setPetCustomName(state, newName.trim());
-              await saveState(state);
-              renderAll();
-            }
-          }
-        });
+        triggerCelebration(res.evolution, celebrationModal, state, PoyoriEngine, getCreatureSprite, saveState, renderAll);
       }
     } else {
       audioSynth.boop();
@@ -495,28 +476,8 @@ function setupOverviewActions() {
     renderSidebar();
 
     if (res.evolution && res.evolution.evolved && celebrationModal) {
-      const evo = res.evolution;
-      const isHatch = evo.stage === 2;
-      celebrationModal.show({
-        type: isHatch ? 'hatch' : 'evolution',
-        title: isHatch ? 'EGG HATCHED!' : (evo.isKomyo ? 'MYTHIC ASCENSION!' : 'EVOLUTION UNLOCKED!'),
-        subtitle: isHatch ? '生まれ (Umare) - A New Life Begins!' : '神獣進化 (Shinju Shinka) - Divine Evolution!',
-        name: `${evo.creature.name} (${evo.creature.jaName})`,
-        badgeText: `STAGE ${evo.stage || 2} ・ ${evo.creature.branch.toUpperCase()}`,
-        spriteUrl: getCreatureSprite(evo.newId, 'idle1', state.pet.accessory),
-        description: evo.creature.desc || 'Your dedication and focused habits have guided Poyori to evolve!',
-        actionLabel: 'Name & Continue!',
-        enableNaming: true,
-        currentName: state.pet.name,
-        onAction: async (newName) => {
-          if (newName && newName.trim()) {
-            PoyoriEngine.setPetCustomName(state, newName.trim());
-            await saveState(state);
-            renderAll();
-          }
-        }
-      });
-    }
+        triggerCelebration(res.evolution, celebrationModal, state, PoyoriEngine, getCreatureSprite, saveState, renderAll);
+      }
   });
 
   document.getElementById('btn-care-sleep').addEventListener('click', async () => {
@@ -596,26 +557,7 @@ function renderTasks() {
 
         const evoRes = PoyoriEngine.checkEvolution(state);
         if (evoRes && evoRes.evolved && celebrationModal) {
-          const isHatch = evoRes.stage === 2;
-          celebrationModal.show({
-            type: isHatch ? 'hatch' : 'evolution',
-            title: isHatch ? 'EGG HATCHED!' : (evoRes.isKomyo ? 'MYTHIC ASCENSION!' : 'EVOLUTION UNLOCKED!'),
-            subtitle: isHatch ? '生まれ (Umare) - A New Life Begins!' : '神獣進化 (Shinju Shinka) - Divine Evolution!',
-            name: `${evoRes.creature.name} (${evoRes.creature.jaName})`,
-            badgeText: `STAGE ${evoRes.stage || 2} ・ ${evoRes.creature.branch.toUpperCase()}`,
-            spriteUrl: getCreatureSprite(evoRes.newId, 'idle1', state.pet.accessory),
-            description: evoRes.creature.desc || 'Your dedication and focused habits have guided Poyori to evolve!',
-            actionLabel: 'Name & Continue!',
-            enableNaming: true,
-            currentName: state.pet.name,
-            onAction: async (newName) => {
-              if (newName && newName.trim()) {
-                PoyoriEngine.setPetCustomName(state, newName.trim());
-                await saveState(state);
-                renderAll();
-              }
-            }
-          });
+          triggerCelebration(evoRes, celebrationModal, state, PoyoriEngine, getCreatureSprite, saveState, renderAll);
           await saveState(state);
           renderAll();
         }

@@ -1823,61 +1823,68 @@ const CREATURE_SPRITE_KEY_MAP = {
  * Generates an idle3 receptive frame with sparkling particles for higher evolutions
  */
 export function createIdle3Grid(baseGrid) {
-  const newGrid = baseGrid.map(row => row.split(''));
+  const newGrid = [...baseGrid];
   const h = newGrid.length;
+  if (h === 0) return newGrid;
   const w = newGrid[0].length;
 
   // Sparkles in corners or above shoulders
-  if (newGrid[1] && newGrid[1][1] === '.') newGrid[1][1] = '*';
-  if (newGrid[2] && newGrid[2][w - 2] === '.') newGrid[2][w - 2] = '*';
-  if (newGrid[h - 3] && newGrid[h - 3][1] === '.') newGrid[h - 3][1] = '*';
-  if (newGrid[h - 2] && newGrid[h - 2][w - 2] === '.') newGrid[h - 2][w - 2] = '*';
+  if (newGrid[1] && newGrid[1][1] === '.') newGrid[1] = newGrid[1].substring(0, 1) + '*' + newGrid[1].substring(2);
+  if (newGrid[2] && newGrid[2][w - 2] === '.') newGrid[2] = newGrid[2].substring(0, w - 2) + '*' + newGrid[2].substring(w - 1);
+  if (newGrid[h - 3] && newGrid[h - 3][1] === '.') newGrid[h - 3] = newGrid[h - 3].substring(0, 1) + '*' + newGrid[h - 3].substring(2);
+  if (newGrid[h - 2] && newGrid[h - 2][w - 2] === '.') newGrid[h - 2] = newGrid[h - 2].substring(0, w - 2) + '*' + newGrid[h - 2].substring(w - 1);
 
-  return newGrid.map(r => r.join(''));
+  return newGrid;
 }
 
 /**
  * Creates a blushing, happy-squint variant of any creature grid when petted
  */
 export function createPettedGrid(baseGrid) {
-  const newGrid = baseGrid.map(row => row.split(''));
+  const newGrid = [...baseGrid];
   const h = newGrid.length;
+  if (h === 0) return newGrid;
   const w = newGrid[0].length;
 
   const blushY = Math.min(h - 4, Math.max(5, Math.floor(h * 0.48)));
   [blushY, blushY + 1].forEach(y => {
     if (newGrid[y]) {
+      let row = newGrid[y];
       for (let x = 2; x <= 4; x++) {
-        if (newGrid[y][x] && newGrid[y][x] !== '.' && newGrid[y][x] !== '#') {
-          newGrid[y][x] = 'B';
+        if (row[x] && row[x] !== '.' && row[x] !== '#') {
+          row = row.substring(0, x) + 'B' + row.substring(x + 1);
         }
       }
       for (let x = w - 5; x <= w - 3; x++) {
-        if (newGrid[y][x] && newGrid[y][x] !== '.' && newGrid[y][x] !== '#') {
-          newGrid[y][x] = 'B';
+        if (row[x] && row[x] !== '.' && row[x] !== '#') {
+          row = row.substring(0, x) + 'B' + row.substring(x + 1);
         }
       }
+      newGrid[y] = row;
     }
   });
 
   const eyeY = blushY - 1;
   if (newGrid[eyeY]) {
+    let row = newGrid[eyeY];
     for (let x = 3; x <= w - 4; x++) {
-      if (newGrid[eyeY][x] === 'b' || newGrid[eyeY][x] === 'w') {
-        newGrid[eyeY][x] = '#';
+      if (row[x] === 'b' || row[x] === 'w') {
+        row = row.substring(0, x) + '#' + row.substring(x + 1);
       }
     }
+    newGrid[eyeY] = row;
   }
 
-  return newGrid.map(r => r.join(''));
+  return newGrid;
 }
 
 /**
  * Creates a grumpy, furrowed-brow variant of any creature grid when neglected
  */
 export function createGrumpyGrid(baseGrid) {
-  const newGrid = baseGrid.map(row => row.split(''));
+  const newGrid = [...baseGrid];
   const h = newGrid.length;
+  if (h === 0) return newGrid;
   const w = newGrid[0].length;
 
   const eyeY = Math.min(h - 5, Math.max(5, Math.floor(h * 0.42)));
@@ -1886,42 +1893,48 @@ export function createGrumpyGrid(baseGrid) {
 
   // 1. Furrowed downward slanting brows: \  /
   if (newGrid[browY]) {
+    let row = newGrid[browY];
     // Left eyebrow slanting down towards center
     for (let x = 3; x <= 5; x++) {
-      if (newGrid[browY][x] && newGrid[browY][x] !== '.') {
-        newGrid[browY][x] = '#';
+      if (row[x] && row[x] !== '.') {
+        row = row.substring(0, x) + '#' + row.substring(x + 1);
       }
     }
     // Right eyebrow slanting down towards center
     for (let x = w - 6; x <= w - 4; x++) {
-      if (newGrid[browY][x] && newGrid[browY][x] !== '.') {
-        newGrid[browY][x] = '#';
+      if (row[x] && row[x] !== '.') {
+        row = row.substring(0, x) + '#' + row.substring(x + 1);
       }
     }
+    newGrid[browY] = row;
   }
 
   // 2. Grumpy sharp eyes: > <
   if (newGrid[eyeY]) {
+    let row = newGrid[eyeY];
     for (let x = 3; x <= w - 4; x++) {
-      if (newGrid[eyeY][x] === 'b' || newGrid[eyeY][x] === 'w') {
-        newGrid[eyeY][x] = '#';
+      if (row[x] === 'b' || row[x] === 'w') {
+        row = row.substring(0, x) + '#' + row.substring(x + 1);
       }
     }
+    newGrid[eyeY] = row;
   }
 
   // 3. Pouty / zig-zag mouth or downturned frown
   if (newGrid[mouthY]) {
+    let row = newGrid[mouthY];
     const midX = Math.floor(w / 2);
-    if (newGrid[mouthY][midX - 1] && newGrid[mouthY][midX - 1] !== '.') newGrid[mouthY][midX - 1] = '#';
-    if (newGrid[mouthY][midX] && newGrid[mouthY][midX] !== '.') newGrid[mouthY][midX] = '#';
-    if (newGrid[mouthY][midX + 1] && newGrid[mouthY][midX + 1] !== '.') newGrid[mouthY][midX + 1] = '#';
+    if (row[midX - 1] && row[midX - 1] !== '.') row = row.substring(0, midX - 1) + '#' + row.substring(midX);
+    if (row[midX] && row[midX] !== '.') row = row.substring(0, midX) + '#' + row.substring(midX + 1);
+    if (row[midX + 1] && row[midX + 1] !== '.') row = row.substring(0, midX + 1) + '#' + row.substring(midX + 2);
+    newGrid[mouthY] = row;
   }
 
   // 4. Little puff of grumpy irritation in top-right corner
-  if (newGrid[1] && newGrid[1][w - 3] === '.') newGrid[1][w - 3] = 'G';
-  if (newGrid[1] && newGrid[1][w - 2] === '.') newGrid[1][w - 2] = 'G';
+  if (newGrid[1] && newGrid[1][w - 3] === '.') newGrid[1] = newGrid[1].substring(0, w - 3) + 'G' + newGrid[1].substring(w - 2);
+  if (newGrid[1] && newGrid[1][w - 2] === '.') newGrid[1] = newGrid[1].substring(0, w - 2) + 'G' + newGrid[1].substring(w - 1);
 
-  return newGrid.map(r => r.join(''));
+  return newGrid;
 }
 
 /**

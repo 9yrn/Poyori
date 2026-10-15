@@ -6,5 +6,8 @@
   "scripts": {
     "test": "node --test tests/*.test.js",
     "build": "node scripts/build-bundle.js"
+  },
+  "dependencies": {
+    "jsdom": "^29.1.1"
   }
 }

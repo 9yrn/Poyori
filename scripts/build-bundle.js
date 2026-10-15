@@ -57,6 +57,7 @@ const spritesCode = stripImportsExports(readFile('content/sprites.js'));
 const controllerCode = stripImportsExports(readFile('content/pet-controller.js'));
 const bubbleCode = stripImportsExports(readFile('ui/quick-bubble.js'));
 const celebrationCode = stripImportsExports(readFile('ui/celebration-modal.js'));
+const uiUtilsCode = stripImportsExports(readFile('shared/ui-utils.js'));
 const modalCode = stripImportsExports(readFile('ui/handheld-modal.js'));
 
 const bundle = `/**
@@ -100,6 +101,9 @@ const bundle = `/**
 
   // 7b. Celebratory Fanfare Plaque Modal
   ${celebrationCode}
+
+  // 7c. UI Utilities
+  ${uiUtilsCode}
 
   // 8. Retro Handheld Device Modal
   ${modalCode}

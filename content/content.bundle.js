@@ -5475,6 +5475,8 @@ class PoyoriController {
 
 
 
+
+
 class QuickBubble {
   constructor(shadowRoot, options = {}) {
     this.shadowRoot = shadowRoot;
@@ -5565,6 +5567,8 @@ class QuickBubble {
         audioSynth.munch();
         this.onPetAction('feed');
         this.onStateChange(state);
+        triggerCelebration(res.evolution, window.celebrationModal, state, PoyoriEngine, getCreatureSprite, () => this.onStateChange(state), null);
+
         this.close();
       } else {
         audioSynth.boop();
@@ -5574,9 +5578,10 @@ class QuickBubble {
 
     this.container.querySelector('#q-pet').addEventListener('click', () => {
       audioSynth.purr();
-      PoyoriEngine.pet(state);
+      const res = PoyoriEngine.pet(state);
       this.onPetAction('pet');
       this.onStateChange(state);
+      triggerCelebration(res.evolution, window.celebrationModal, state, PoyoriEngine, getCreatureSprite, () => this.onStateChange(state), null);
       this.close();
     });
 
@@ -5821,6 +5826,33 @@ class CelebrationModal {
 }
 
 
+  // 7c. UI Utilities
+  function triggerCelebration(evo, celebrationModal, state, PoyoriEngine, getCreatureSprite, saveState, renderCallback) {
+  if (!evo || !evo.evolved || !celebrationModal) return false;
+  const isHatch = evo.stage === 2;
+  celebrationModal.show({
+    type: isHatch ? 'hatch' : 'evolution',
+    title: isHatch ? 'EGG HATCHED!' : (evo.isKomyo ? 'MYTHIC ASCENSION!' : 'EVOLUTION UNLOCKED!'),
+    subtitle: isHatch ? '生まれ (Umare) - A New Life Begins!' : '神獣進化 (Shinju Shinka) - Divine Evolution!',
+    name: `${evo.creature.name} (${evo.creature.jaName})`,
+    badgeText: `STAGE ${evo.stage || 2} ・ ${evo.creature.branch.toUpperCase()}`,
+    spriteUrl: getCreatureSprite(evo.newId, 'idle1', state.pet.accessory),
+    description: evo.creature.desc || 'Your dedication and focused habits have guided Poyori to evolve!',
+    actionLabel: 'Name & Continue!',
+    enableNaming: true,
+    currentName: state.pet.name,
+    onAction: async (newName) => {
+      if (newName && newName.trim()) {
+        PoyoriEngine.setPetCustomName(state, newName.trim());
+        if (saveState) await saveState(state);
+        if (renderCallback) renderCallback();
+      }
+    }
+  });
+  return true;
+}
+
+
   // 8. Retro Handheld Device Modal
   /**
  * Poyori (ポヨリ) — Handheld Tamagotchi Device Modal UI Logic
@@ -5829,6 +5861,7 @@ class CelebrationModal {
  * fixed-reward task adding, NSFW filter control, custom blocked site manager,
  * and comprehensive multi-language support.
  */
+
 
 
 
@@ -6696,26 +6729,7 @@ class HandheldModal {
           // Check if completing task triggered evolution
           const evoRes = PoyoriEngine.checkEvolution(this.state);
           if (evoRes && evoRes.evolved && this.celebrationModal) {
-            const isHatch = evoRes.stage === 2;
-            this.celebrationModal.show({
-              type: isHatch ? 'hatch' : 'evolution',
-              title: isHatch ? 'EGG HATCHED!' : (evoRes.isKomyo ? 'MYTHIC ASCENSION!' : 'EVOLUTION UNLOCKED!'),
-              subtitle: isHatch ? '生まれ (Umare) - A New Life Begins!' : '神獣進化 (Shinju Shinka) - Divine Evolution!',
-              name: `${evoRes.creature.name} (${evoRes.creature.jaName})`,
-              badgeText: `STAGE ${evoRes.stage || 2} ・ ${evoRes.creature.branch.toUpperCase()}`,
-              spriteUrl: getCreatureSprite(evoRes.newId, 'idle1', this.state.pet.accessory),
-              description: evoRes.creature.desc || 'Your dedication and focused habits have guided Poyori to evolve!',
-              actionLabel: 'Name & Continue!',
-              enableNaming: true,
-              currentName: this.state.pet.name,
-              onAction: (newName) => {
-                if (newName && newName.trim()) {
-                  PoyoriEngine.setPetCustomName(this.state, newName.trim());
-                  this.onStateChange(this.state);
-                  this.render();
-                }
-              }
-            });
+            triggerCelebration(evoRes, this.celebrationModal, this.state, PoyoriEngine, getCreatureSprite, () => this.onStateChange(this.state), () => this.render());
             this.onStateChange(this.state);
             this.render();
           }
@@ -6747,27 +6761,7 @@ class HandheldModal {
           this.render();
 
           if (res.evolution && res.evolution.evolved && this.celebrationModal) {
-            const evo = res.evolution;
-            const isHatch = evo.stage === 2;
-            this.celebrationModal.show({
-              type: isHatch ? 'hatch' : 'evolution',
-              title: isHatch ? 'EGG HATCHED!' : (evo.isKomyo ? 'MYTHIC ASCENSION!' : 'EVOLUTION UNLOCKED!'),
-              subtitle: isHatch ? '生まれ (Umare) - A New Life Begins!' : '神獣進化 (Shinju Shinka) - Divine Evolution!',
-              name: `${evo.creature.name} (${evo.creature.jaName})`,
-              badgeText: `STAGE ${evo.stage || 2} ・ ${evo.creature.branch.toUpperCase()}`,
-              spriteUrl: getCreatureSprite(evo.newId, 'idle1', this.state.pet.accessory),
-              description: evo.creature.desc || 'Your dedication and focused habits have guided Poyori to evolve!',
-              actionLabel: 'Name & Continue!',
-              enableNaming: true,
-              currentName: this.state.pet.name,
-              onAction: (newName) => {
-                if (newName && newName.trim()) {
-                  PoyoriEngine.setPetCustomName(this.state, newName.trim());
-                  this.onStateChange(this.state);
-                  this.render();
-                }
-              }
-            });
+            triggerCelebration(res.evolution, this.celebrationModal, this.state, PoyoriEngine, getCreatureSprite, () => this.onStateChange(this.state), () => this.render());
           }
         }
       });

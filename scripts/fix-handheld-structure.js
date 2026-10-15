@@ -41,7 +41,7 @@ const fixedSplit = `    const openDashBtn = this.modalEl.querySelector('#open-fu
 code = code.replace(badSplit, fixedSplit);
 
 // Ensure the class closes with `  }\n}\n`
-code = code.trimEnd() + '\n  }\n}\n';
+code = code.replace(/\s*}\s*}\s*$/, '') + '\n  }\n}\n';
 
 fs.writeFileSync(modalPath, code, 'utf8');
 console.log('Successfully fixed handheld-modal.js structure and removed emojis');
